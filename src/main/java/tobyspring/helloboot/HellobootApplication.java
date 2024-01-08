@@ -29,17 +29,30 @@ import java.io.IOException;
 @ComponentScan
 public class HellobootApplication {
 
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory() {
+        return new TomcatServletWebServerFactory();
+    }
+
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
+    }
+
     public static void main(String[] args) {
         //톰캣 서블릿 웹서버를 만들어주는 클래스
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext() {
             @Override
             protected void onRefresh() {
                 super.onRefresh();
-                ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+                ServletWebServerFactory serverFactory = this.getBean(ServletWebServerFactory.class);
+                DispatcherServlet dispatcherServlet = this.getBean(DispatcherServlet.class);
+//                Spring 컨테이너가 DispatcherServlet에는 applicationContext가 필요한 것을 알고 주입해줌.
+//                dispatcherServlet.setApplicationContext(this);
+
                 WebServer webServer = serverFactory.getWebServer(servletContext -> {
-                    servletContext.addServlet("dispatcherServlet",
-                                              new DispatcherServlet(this)
-                                             ).addMapping("/*");
+                    servletContext.addServlet("dispatcherServlet", dispatcherServlet)
+                                  .addMapping("/*");
                 });
                 webServer.start();
             }
