@@ -12,6 +12,7 @@ import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -25,17 +26,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import java.io.IOException;
 
 @Configuration //구성 정보를 가지고 있는 클래스 -> 안에서 bean을 찾음
+@ComponentScan
 public class HellobootApplication {
-
-    @Bean //자바 팩토리메서드에서 인식할 수 있게 하는 어노테이션
-    public HelloController helloController(HelloService helloService) {
-        return new HelloController(helloService);
-    }
-
-    @Bean
-    public HelloService helloService() {
-        return new SimpleHelloService();
-    }
 
     public static void main(String[] args) {
         //톰캣 서블릿 웹서버를 만들어주는 클래스
