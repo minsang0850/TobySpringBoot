@@ -19,7 +19,9 @@ public class HelloController implements ApplicationContextAware {
 
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name") String name) {
-        return helloService.sayHello(Objects.requireNonNull(name));
+        if(name == null || name.trim().length()==0) throw new IllegalArgumentException();
+
+        return helloService.sayHello(name);
     }
 
     @Override
